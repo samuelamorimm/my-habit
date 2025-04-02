@@ -21,7 +21,7 @@ export default function CreateHabits() {
   const [location, setLocation] = useState('');
   const [category, setCategory] = useState('EXERCISE');
 
-  const API_URL = 'http://10.19.14.121:8000/api/habits/'
+  const API_URL = 'http://192.168.18.33:8000/api/habits/';
 
   const startDateTime = () => {
     DateTimePickerAndroid.open({
@@ -51,7 +51,7 @@ export default function CreateHabits() {
 
 
   function formatTime(date) {
-    return date.toTimeString().split(" ")[0]; // Retorna "HH:MM:SS"
+    return date.toTimeString().split(" ")[0];
   }
   
   async function createdHabits() {

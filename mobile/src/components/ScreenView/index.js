@@ -32,13 +32,9 @@ export default function ScreenView({ children }) {
         colors={['#261B40', '#000000']} // Defina as cores do gradiente
         style={styles.gradient}
       >
-        <ScrollView
-          style={{ width: '100%' }}
-          contentContainerStyle={styles.scrollContainer}
-          keyboardShouldPersistTaps="handled"
-        >
+        
           {children}
-        </ScrollView>
+        
         {!isKeyboardVisible && <Nav />}
       </LinearGradient>
 

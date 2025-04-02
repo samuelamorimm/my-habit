@@ -12,7 +12,7 @@ export default function Login() {
 
     const navigation = useNavigation();
 
-    const API_URL = 'http://10.19.14.121:8000/';
+    const API_URL = 'http://192.168.18.33:8000/';
 
     async function loginUser(username, password) {
         const data = {

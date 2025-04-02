@@ -18,7 +18,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='inicio' screenOptions={{
+      <Stack.Navigator initialRouteName='home' screenOptions={{
         headerShown: false,
         animation: 'fade',
       }}>
