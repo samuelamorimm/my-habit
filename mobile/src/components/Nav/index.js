@@ -34,14 +34,14 @@ export default function Nav() {
                     size={32}
                 />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('relatorio')}>
                 <Icon
                     name='calendar'
                     color='white'
                     size={32}
                 />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('perfil')}>
                 <Icon
                     name='person'
                     color='white'
@@ -54,12 +54,14 @@ export default function Nav() {
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'flex-end',
+        alignItems: 'center',
         justifyContent: 'space-around',
         flexDirection: 'row',
         width: '95%',
         position: 'absolute',
-        bottom: 30,
+        bottom: 0,
+        height: 80,
+        backgroundColor: '#000'
     },
     add: {
         width: 60,
@@ -69,6 +71,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: '50%',
         borderWidth: 2,
-        borderColor: '#5F1C8C'
+        borderColor: '#5F1C8C',
     }
 });

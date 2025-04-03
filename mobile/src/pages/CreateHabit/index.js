@@ -6,6 +6,7 @@ import axios from 'axios';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Picker } from '@react-native-picker/picker';
 
 
 import Nav from '../../components/Nav';
@@ -13,87 +14,113 @@ import Header from "../../components/Header";
 
 export default function CreateHabits() {
 
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [startTime, setStartTime] = useState(new Date());
-    const [endTime, setEndTime] = useState(new Date());
-    const [location, setLocation] = useState('');
-    const [data, setData] = useState([])
-    const [showStartPicker, setShowStartPicker] = useState(false);
-    const [showEndPicker, setShowEndPicker] = useState(false);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [startTime, setStartTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(new Date());
+  const [location, setLocation] = useState('');
+  const [category, setCategory] = useState('EXERCISE');
 
-    const startDateTime = () => {
-      DateTimePickerAndroid.open({
-        value: startTime,
-        mode: "time",
-        is24Hour: true,
-        onChange: (event, selectedDate) => {
-          if (selectedDate) {
-            setStartTime(selectedDate);
-          }
+  const API_URL = 'http://10.19.14.121:8000/api/habits/'
+
+  const startDateTime = () => {
+    DateTimePickerAndroid.open({
+      value: startTime,
+      mode: "time",
+      is24Hour: true,
+      onChange: (event, selectedDate) => {
+        if (selectedDate) {
+          setStartTime(selectedDate);
+        }
+      },
+    });
+  };
+
+  const endDateTime = () => {
+    DateTimePickerAndroid.open({
+      value: endTime,
+      mode: "time",
+      is24Hour: true,
+      onChange: (event, selectedDate) => {
+        if (selectedDate) {
+          setEndTime(selectedDate);
+        }
+      },
+    });
+  };
+
+
+  function formatTime(date) {
+    return date.toTimeString().split(" ")[0]; // Retorna "HH:MM:SS"
+  }
+  
+  async function createdHabits() {
+    const data = {
+      title,
+      description,
+      start_time: formatTime(startTime),
+      end_time: formatTime(endTime),
+      location,
+      category,
+      user: 1,
+    };
+  
+    console.log("Enviando dados:", data); // Debug
+    try {
+      const response = await axios.post(API_URL, data, {
+        headers: {
+          "Content-Type": "application/json",
         },
       });
-    };
+      console.log("Sucesso!", response.data);
+    } catch (e) {
+      console.log("Erro ao fazer o post:", e.response?.data || e.message);
+    }
+  }
+  
 
-    const endDateTime = () => {
-      DateTimePickerAndroid.open({
-        value: endTime,
-        mode: "time",
-        is24Hour: true,
-        onChange: (event, selectedDate) => {
-          if (selectedDate) {
-            setEndTime(selectedDate);
-          }
-        },
-      });
-    };
-  
-  
-    async function createdHabits() {
-  
-      const data = {
-        title,
-        description,
-        start_time: startTime,
-        end_time: endTime,
-        location,
-      };
-  
-      try {
-        const response = await axios.post(API_URL, data);
-  
-      } catch (e) {
-        console.log('Erro ao fazer o post:', e)
-      }
-    };
 
-    
 
   return (
     <ScreenView>
       <View style={styles.container}>
 
-            <Header title='Crie um hábito'/>
-      
-            <TextInput
-              style={styles.input}
-              placeholder="Título"
-              value={title}
-              onChangeText={setTitle}
-            />
-              <TextInput
-                style={styles.input}
-                placeholder="Categoria"
-                value={location}
-                onChangeText={setLocation}
-              />
-            <TextInput
-              style={styles.input}
-              placeholder="Descrição"
-              value={description}
-              onChangeText={setDescription}
-            />
-            {/* <TextInput
+        <Header title='Crie um hábito' />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Título"
+          value={title}
+          onChangeText={setTitle}
+        />
+        <View style={styles.viewPicker}>
+          <Picker
+            selectedValue={category}
+            onValueChange={(value) => setCategory(value)}
+            style={styles.picker}
+            itemStyle={styles.pickerItem}
+          >
+            <Picker.Item label="Exercício" value="EXERCISE" />
+            <Picker.Item label="Saúde" value="HEALTH" />
+            <Picker.Item label="Aprendizado" value="LEARNING" />
+            <Picker.Item label="Trabalho" value="WORK" />
+            <Picker.Item label="Lazer" value="LEISURE" />
+          </Picker>
+        </View>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Local"
+          value={location}
+          onChangeText={setLocation}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Descrição"
+          value={description}
+          onChangeText={setDescription}
+        />
+        {/* <TextInput
               style={styles.input}
               placeholder="Horário de Início (HH:MM:SS)"
               value={startTime}
@@ -106,40 +133,42 @@ export default function CreateHabits() {
               onChangeText={setEndTime}
             /> */}
 
-            <View style={styles.areaTime}>
-              <Text style={styles.label}>Horário de inicio</Text>
-              <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-              <TouchableOpacity style={styles.btnTime} onPress={startDateTime}>
-                <Icon
-                  name='calendar'
-                  size={32}
-                  color='#5F1C8C'
-                />
-              </TouchableOpacity>
-                <Text style={styles.txtBtnTime}>Hora:  {startTime.toLocaleTimeString().slice(0, -3)}</Text>
-              </View>
-            </View>
-
-            <View style={styles.areaTime}>
-              <Text style={styles.label}>Horário de fim</Text>
-              <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-              <TouchableOpacity style={styles.btnTime} onPress={endDateTime}>
-                <Icon
-                  name='calendar'
-                  size={32}
-                  color='#5F1C8C'
-                />
-              </TouchableOpacity>
-                <Text style={styles.txtBtnTime}>Hora:  {endTime.toLocaleTimeString().slice(0, -3)}</Text>
-              </View>
-            </View>
-
-      
-            <TouchableOpacity style={styles.btn}>
-              <Text style={styles.txtBtn}>Criar</Text>
+        <View style={styles.areaTime}>
+          <Text style={styles.label}>Horário de início</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+            <TouchableOpacity style={styles.btnTime} onPress={startDateTime}>
+              <Icon
+                name='calendar'
+                size={32}
+                color='#5F1C8C'
+              />
             </TouchableOpacity>
-      
+            <Text style={styles.txtBtnTime}>Hora:  {startTime.toLocaleTimeString().slice(0, -3)}</Text>
           </View>
+        </View>
+
+        <View style={styles.areaTime}>
+          <Text style={styles.label}>Horário de fim</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+            <TouchableOpacity style={styles.btnTime} onPress={endDateTime}>
+              <Icon
+                name='calendar'
+                size={32}
+                color='#5F1C8C'
+              />
+            </TouchableOpacity>
+            <Text style={styles.txtBtnTime}>Hora:  {endTime.toLocaleTimeString().slice(0, -3)}</Text>
+          </View>
+        </View>
+
+
+        <TouchableOpacity style={styles.btn} onPress={() => {
+          createdHabits();
+        }}>
+          <Text style={styles.txtBtn}>Criar</Text>
+        </TouchableOpacity>
+
+      </View>
     </ScreenView>
   );
 }
@@ -154,7 +183,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e1e1e1',
     width: '80%',
     marginTop: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
     height: 45,
     borderRadius: 8,
   },
@@ -170,8 +199,8 @@ const styles = StyleSheet.create({
   txtBtn: {
     color: '#fff',
     fontSize: 24,
-    fontWeight:'bold',
-  }, 
+    fontWeight: 'bold',
+  },
   areaTime: {
     marginTop: 20,
     width: '80%',
@@ -182,7 +211,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   btnTime: {
-    
+
     backgroundColor: '#fff',
     width: '20%',
     marginTop: 8,
@@ -194,6 +223,21 @@ const styles = StyleSheet.create({
   txtBtnTime: {
     color: '#fff',
     fontWeight: 'semi-bold'
-  }
+  },
+  picker: {
+    width: '100%',
+    padding: 0,
+    borderRadius: 10,
+    color: 'gray',
+    fontSize: 16,
+  },
+  viewPicker: {
+    width: '80%',
+    marginTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    backgroundColor: '#e1e1e1'
+  },
 
 });

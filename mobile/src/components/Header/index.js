@@ -12,13 +12,15 @@ const styles = StyleSheet.create({
   header: {
     width: '100%',
     justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 30,
+    alignItems: 'left',
+    marginLeft: 40,
+    marginTop: 30,
 
   },
   titulo: {
     color: '#fff',
     fontSize: 32,
     fontWeight: 'bold',
+    fontFamily: 'monospace',
   }
 })

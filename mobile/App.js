@@ -8,15 +8,17 @@ import Login from './src/pages/Login';
 import Register from './src/pages/Register';
 
 import Home from './src/pages/Home';
-import CreateHabits from './src/pages/CreateHabit';
 import Statistic from './src/pages/Statistics';
+import CreateHabits from './src/pages/CreateHabit';
+import Report from './src/pages/Report';
+import Profile from './src/pages/Profile';
 
 export default function App() {
   const Stack = createStackNavigator();
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='home' screenOptions={{
+      <Stack.Navigator initialRouteName='inicio' screenOptions={{
         headerShown: false,
         animation: 'fade',
       }}>
@@ -26,6 +28,8 @@ export default function App() {
         <Stack.Screen name='home' component={Home}/>
         <Stack.Screen name='criarHabito' component={CreateHabits}/>
         <Stack.Screen name='estatistica' component={Statistic}/>
+        <Stack.Screen name='relatorio' component={Report}/>
+        <Stack.Screen name='perfil' component={Profile}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
