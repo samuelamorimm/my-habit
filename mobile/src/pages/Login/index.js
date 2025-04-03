@@ -5,14 +5,15 @@ import axios from 'axios';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Login() {
+export default function Login({ setIsAuthenticated }) {
     const [username, setUsername] = useState(null);
     const [password, setPassword] = useState(null);
 
     const navigation = useNavigation();
 
-    const API_URL = 'http://192.168.18.33:8000/';
+    const API_URL = 'http://10.19.14.121:8000/';
 
     async function loginUser(username, password) {
         const data = {
@@ -26,9 +27,14 @@ export default function Login() {
                     'Content-Type': 'application/json',
                 }
             });
+
+            const token = response.data.token
+            await AsyncStorage.setItem('authToken', token) // salva o token
+
+
             console.log('Login bem-sucedido:', response.data);
             alert('Login bem-sucedido!');
-            navigation.navigate('home')
+            setIsAuthenticated(true);
         } catch (error) {
             console.log('Erro ao fazer login:', error);
             alert('Erro ao fazer login: ' + error.response.data.non_field_errors[0]);

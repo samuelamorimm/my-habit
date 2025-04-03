@@ -21,7 +21,7 @@ export default function CreateHabits() {
   const [location, setLocation] = useState('');
   const [category, setCategory] = useState('EXERCISE');
 
-  const API_URL = 'http://192.168.18.33:8000/api/habits/';
+  const API_URL = 'http://10.19.14.121:8000/api/habits/';
 
   const startDateTime = () => {
     DateTimePickerAndroid.open({
@@ -103,8 +103,8 @@ export default function CreateHabits() {
             <Picker.Item label="Exercício" value="EXERCISE" />
             <Picker.Item label="Saúde" value="HEALTH" />
             <Picker.Item label="Aprendizado" value="LEARNING" />
-            <Picker.Item label="Trabalho" value="WORK" />
-            <Picker.Item label="Lazer" value="LEISURE" />
+            <Picker.Item label="Trabalho" value="WORK"/>
+            <Picker.Item label="Lazer" value="LEISURE"/>
           </Picker>
         </View>
 

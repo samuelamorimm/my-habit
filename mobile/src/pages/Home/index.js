@@ -15,7 +15,7 @@ export default function Home() {
   const formattedDate = dateNow.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' });
 
   
-  const API_URL = 'http://192.168.18.33:8000/api/habits/';
+  const API_URL = 'http://10.19.14.121:8000/api/habits/';
 
   useEffect(() => {
     async function getHabits() {

@@ -6,12 +6,25 @@ import axios from 'axios';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 
 import Nav from '../../components/Nav';
 import Header from "../../components/Header";
 
-export default function Profile() {
+export default function Profile({setIsAuthenticated}) {
+
+    const navigation = useNavigation();
+
+    async function logoutUser(){
+        try {
+            await AsyncStorage.removeItem('authToken'); // remove o token salvo
+            setIsAuthenticated(false)
+        } catch (e) {
+            console.log('erro ao fazer logout:', e)
+        }
+    }
 
     return (
         <ScreenView>
@@ -50,6 +63,15 @@ export default function Profile() {
                     </TouchableOpacity>
                 ))}
 
+                <TouchableOpacity style={styles.btnLogout} onPress={logoutUser}>
+                    <Icon
+                        name="log-out"
+                        color='#fff'
+                        size={20}
+                    />
+                    <Text style={styles.txtBtnLogout}>Sair da conta</Text>
+                </TouchableOpacity>
+
             </View>
         </ScreenView>
     );
@@ -81,7 +103,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     btnConfig: {
-        width: '89%',
+        width: '90%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -92,6 +114,24 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'semibold',
         fontFamily: 'monospace',
+    },
+    btnLogout: {
+        borderWidth: 2,
+        borderColor: '#fff',
+        borderRadius: 8,
+        width: '60%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 25,
+        gap: 10,
+        padding: 5,
+    },
+    txtBtnLogout: {
+        color: '#fff',
+        fontSize: 20,
+        fontWeight: 'bold',
+        fontFamily: 'monospace'
     }
 
 });

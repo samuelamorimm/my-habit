@@ -17,8 +17,8 @@ export default function Statistic() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [habits, setHabits] = useState([]);
 
-  const API_URL = 'http://192.168.18.33:8000/api/habits/';
-  const CHECKIN_URL = 'http://192.168.18.33:8000/api/checkins/';
+  const API_URL = 'http://10.19.14.121:8000/api/habits/';
+  const CHECKIN_URL = 'http://10.19.14.121:8000/api/checkins/';
 
   useEffect(() => {
     async function getHabits() {
@@ -115,12 +115,16 @@ export default function Statistic() {
 
         <FlatList
           data={habits}
-          renderItem={({ item }) => <LinearGradient style={styles.habit}
+          style={{marginBottom: 80}}
+          renderItem={({ item }) => 
+          <TouchableOpacity>
+          <LinearGradient style={styles.habit}
             colors={['#5F1C8C', '#F57C8C']} // Defina as cores do gradiente
             start={{ x: 0, y: 0 }} // Começa no canto superior esquerdo
             end={{ x: 1, y: 2 }}   // Termina no canto inferior direito (diagonal)
           >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, }}>
+            <View style={{gap: 10}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, }}>
               <Icon
                 name='fitness'
                 color='#fff'
@@ -138,6 +142,7 @@ export default function Statistic() {
                 {new Date(`1970-01-01T${item.start_time}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </Text>
             </View>
+            </View>
 
             <View style={styles.checkboxArea}>
               <Checkbox
@@ -147,7 +152,9 @@ export default function Statistic() {
               />
             </View>
 
-          </LinearGradient>}
+          </LinearGradient>
+          </TouchableOpacity>
+          }
         />
         {/* fim do FLATLIST */}
 
@@ -219,15 +226,15 @@ const styles = StyleSheet.create({
     fontSize: 18
   },
   habit: {
-    width: '90%',
+    width: '95%',
     alignSelf: 'center',
     borderRadius: 20,
     marginTop: 15,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    justifyContent: 'space-between'
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    justifyContent: 'space-between',
   },
   habitTitle: {
     fontSize: 18,
