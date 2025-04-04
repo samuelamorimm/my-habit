@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { format, addDays, ptBR } from 'date-fns';
 import { Checkbox } from "react-native-paper";
 import API_URL from '../../services/api';
+import iconCategory from "../../services/category";
 
 import Header from "../../components/Header";
 import ModalView from "../../components/ModalStatistic";
@@ -143,7 +144,7 @@ export default function Statistic() {
               >
                 <View style={{ gap: 10 }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                    <Icon name='fitness' color='#fff' size={25} />
+                    {iconCategory(item.category, "#fff")}
                     <Text style={styles.habitTitle}>{item.title}</Text>
                   </View>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>

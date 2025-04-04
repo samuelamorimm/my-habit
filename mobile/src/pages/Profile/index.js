@@ -28,6 +28,7 @@ export default function Profile({setIsAuthenticated}) {
 
     return (
         <ScreenView>
+            <ScrollView style={{width: '100%'}}>
             <View style={styles.container}>
 
                 <Header title='Perfil' />
@@ -73,6 +74,7 @@ export default function Profile({setIsAuthenticated}) {
                 </TouchableOpacity>
 
             </View>
+            </ScrollView>
         </ScreenView>
     );
 }
@@ -123,7 +125,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 25,
+        marginTop: 35,
         gap: 10,
         padding: 5,
     },

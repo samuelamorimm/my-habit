@@ -34,6 +34,7 @@ export default function ScreenView({ children }) {
       >
         
           {children}
+          
         
         {!isKeyboardVisible && <Nav />}
       </LinearGradient>

@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import API_URL from '../../services/api';
 import Header from "../../components/Header";
 import { Checkbox } from "react-native-paper";
+import iconCategory from "../../services/category";
 
 export default function Report() {
     const getCurrentDate = () => new Date().toISOString().split('T')[0];
@@ -88,7 +89,7 @@ export default function Report() {
 
                                     return (
                                         <View style={styles.habitItem}>
-                                            <Icon name='fitness' size={24} color='#5F1C8C' />
+                                            {iconCategory(item.category, '#5F1C8C')}
                                             <Text style={styles.habitText}>{item.title}</Text>
                                             <Checkbox status={isChecked ? "checked" : "unchecked"} color={isChecked ? "#5F1C8C" : "gray"} />
                                         </View>

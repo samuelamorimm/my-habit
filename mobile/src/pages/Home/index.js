@@ -7,6 +7,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import API_URL from '../../services/api';
 import { useNavigation } from '@react-navigation/native';
 
+import iconCategory from '../../services/category';
+
 import ScreenView from '../../components/ScreenView';
 import Header from '../../components/Header';
 
@@ -53,7 +55,8 @@ export default function Home() {
 
   return (
     <ScreenView>
-      <Header title='Hoje' />
+      
+      <Header title='Hoje'/>
       <Text style={styles.titulo}>{formattedDate}</Text>
 
       <View style={styles.areaHabits}>
@@ -64,7 +67,7 @@ export default function Home() {
           renderItem={({ item }) => (
             <LinearGradient style={styles.habit} colors={['#5F1C8C', '#F57C8C']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 2 }}>
               <View style={styles.habitRow}>
-                <Icon name='fitness' color='#fff' size={25} />
+                {iconCategory(item.category, '#fff')}
                 <Text style={styles.habitTitle}>{item.title}</Text>
               </View>
               <View style={styles.habitRow}>
@@ -88,7 +91,7 @@ export default function Home() {
           renderItem={({ item }) => (
             <LinearGradient style={styles.habit} colors={['#5F1C8C', '#F57C8C']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 2 }}>
               <View style={styles.habitRow}>
-                <Icon name='fitness' color='#fff' size={25} />
+              {iconCategory(item.category, '#fff')}
                 <Text style={styles.habitTitle}>{item.title}</Text>
               </View>
               <View style={styles.habitRow}>

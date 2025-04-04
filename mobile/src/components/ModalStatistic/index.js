@@ -5,23 +5,24 @@ import axios from 'axios';
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+import iconCategory from '../../services/category';
 
 
 export default function ModalView(props) {
 
   const navigation = useNavigation();
-  function inconCategory(categoria){
-    if (categoria == 'HEALTH') {
-      return (
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 10,}}>
-          <Icon
-            name='heart'
-            size={25}
-            color='#fff'
-          />
-          <Text style={styles.categoria}>Saúde</Text>
-        </View>
-      )
+  
+  function categoryFormat(c){
+    if (c === 'EXERCISE') {
+       return <Text style={styles.txt}>Exercícios</Text>
+    } else if (c === 'HEALTH') {
+      return <Text style={styles.txt}>Saúde</Text>
+    }  else if (c === 'LEARNING') {
+      return <Text style={styles.txt}>Aprendizado</Text>
+    }  else if (c === 'WORK') {
+      return <Text style={styles.txt}>Trabalho</Text>
+    } else {
+      return <Text style={styles.txt}>Lazer</Text>
     }
   }
 
@@ -39,7 +40,11 @@ export default function ModalView(props) {
       >
 
         <Text style={styles.titulo}>{props.h.title}</Text>
-        {inconCategory(props.h.category)}
+
+        <View style={{flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 30,}}>
+        {iconCategory(props.h.category, '#FFF')}
+        {categoryFormat(props.h.category)}
+        </View>
 
         <View style={{flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 30,}}>
         <Icon

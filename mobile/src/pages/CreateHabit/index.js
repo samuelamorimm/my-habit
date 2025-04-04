@@ -84,6 +84,7 @@ export default function CreateHabits() {
 
   return (
     <ScreenView>
+      <ScrollView style={{width: '100%'}}>
       <View style={styles.container}>
 
         <Header title='Crie um hábito' />
@@ -170,6 +171,7 @@ export default function CreateHabits() {
         </TouchableOpacity>
 
       </View>
+      </ScrollView>
     </ScreenView>
   );
 }
@@ -179,6 +181,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     width: '100%',
+    marginBottom: 80,
   },
   input: {
     backgroundColor: '#e1e1e1',
