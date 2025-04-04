@@ -6,6 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import API_URL from '../../services/api';
 
 export default function Login({ setIsAuthenticated }) {
     const [username, setUsername] = useState(null);
@@ -13,7 +14,7 @@ export default function Login({ setIsAuthenticated }) {
 
     const navigation = useNavigation();
 
-    const API_URL = 'http://10.19.14.121:8000/';
+    
 
     async function loginUser(username, password) {
         const data = {
@@ -22,7 +23,7 @@ export default function Login({ setIsAuthenticated }) {
         }
 
         try {
-            const response = await axios.post(`${API_URL}login/`, data, {
+            const response = await axios.post(`${API_URL}/login/`, data, {
                 headers: {
                     'Content-Type': 'application/json',
                 }

@@ -1,42 +1,48 @@
 import ScreenView from "../../components/ScreenView";
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, FlatList, TouchableOpacity, TextInput, Button, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Modal, FlatList } from 'react-native';
 import axios from 'axios';
-import { LinearGradient } from 'expo-linear-gradient';
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
-import Icon from 'react-native-vector-icons/Ionicons';
 import { Calendar } from "react-native-calendars";
-
-
-import Nav from '../../components/Nav';
+import Icon from 'react-native-vector-icons/Ionicons';
+import API_URL from '../../services/api';
 import Header from "../../components/Header";
+import { Checkbox } from "react-native-paper";
 
 export default function Report() {
-
-    const getCurrentDate = () => {
-        return new Date().toISOString().split('T')[0]; // Retorna "YYYY-MM-DD"
-    };
+    const getCurrentDate = () => new Date().toISOString().split('T')[0];
 
     const [selectedDate, setSelectedDate] = useState(getCurrentDate());
-
-    
+    const [habits, setHabits] = useState([]);
+    const [checkins, setCheckins] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const formatDate = (dateString) => {
-        const [year, month, day] = dateString.split("-"); // Divide a string "2025-04-01"
-        return `${day}/${month}/${year}`; // Retorna no formato "01/04/2025"
+        const [year, month, day] = dateString.split("-");
+        return `${day}/${month}/${year}`;
     };
-    
-   
-    
+
+    const fetchHabitsAndCheckins = async () => {
+        try {
+            const habitsResponse = await axios.get(`${API_URL}/api/habits`);
+            const checkinsResponse = await axios.get(`${API_URL}/api/checkins`);
+
+            setHabits(habitsResponse.data);
+
+            // Filtra os check-ins do dia selecionado
+            const checkinsDoDia = checkinsResponse.data.filter(c => c.check_in_time.startsWith(selectedDate));
+            setCheckins(checkinsDoDia);
+
+            setModalVisible(true); // Abre o modal ao buscar os dados
+        } catch (error) {
+            console.log("Erro ao buscar hábitos e check-ins:", error);
+        }
+    };
 
     return (
         <ScreenView>
             <View style={styles.container}>
-
                 <Header title='Relatórios' />
-
-
 
                 <Calendar
                     onDayPress={(day) => setSelectedDate(day.dateString)}
@@ -63,11 +69,39 @@ export default function Report() {
                     <Text style={styles.subtitulo}>Data: {formatDate(selectedDate)}</Text>
                 </View>
 
-                <TouchableOpacity style={styles.btn} onPress={() => {
-                    alert('')
-                }}>
+                <TouchableOpacity style={styles.btn} onPress={fetchHabitsAndCheckins}>
                     <Text style={styles.txtBtn}>Exibir Relatório</Text>
                 </TouchableOpacity>
+
+                {/* MODAL PARA EXIBIR OS HÁBITOS */}
+                <Modal visible={modalVisible} transparent={true} animationType="slide" onRequestClose={() => setModalVisible(false)}>
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalTitle}>Hábitos de {formatDate(selectedDate)}</Text>
+
+                            <FlatList
+                                data={habits}
+                                keyExtractor={(item) => item.id.toString()}
+                                renderItem={({ item }) => {
+                                    const checkinDoDia = checkins.find(c => c.habit === item.id);
+                                    const isChecked = checkinDoDia ? checkinDoDia.status : false;
+
+                                    return (
+                                        <View style={styles.habitItem}>
+                                            <Icon name='fitness' size={24} color='#5F1C8C' />
+                                            <Text style={styles.habitText}>{item.title}</Text>
+                                            <Checkbox status={isChecked ? "checked" : "unchecked"} color={isChecked ? "#5F1C8C" : "gray"} />
+                                        </View>
+                                    );
+                                }}
+                            />
+
+                            <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+                                <Text style={styles.closeButtonText}>Fechar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
             </View>
         </ScreenView>
     );
@@ -79,14 +113,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
     },
-    calendarView: {
-        borderWidth: 2,
-        padding: 5,
-    },
     subtitulo: {
-        fontSize: 25,
+        fontSize: 20,
         fontWeight: 'bold',
-        fontFamily: 'monospace',
         color: '#fff',
         marginTop: 20,
         marginBottom: 10,
@@ -98,12 +127,54 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 20,
         paddingVertical: 10,
-        marginTop: '10%'
+        marginTop: '10%',
     },
     txtBtn: {
         color: '#fff',
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
     },
-
+    modalContainer: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalContent: {
+        width: '90%',
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
+    },
+    modalTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#5F1C8C',
+        textAlign: 'center',
+        marginBottom: 15,
+    },
+    habitItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#e1e1e1',
+    },
+    habitText: {
+        fontSize: 18,
+        color: '#333',
+    },
+    closeButton: {
+        backgroundColor: '#F57C8C',
+        borderRadius: 10,
+        paddingVertical: 10,
+        marginTop: 20,
+        alignItems: 'center',
+    },
+    closeButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
 });

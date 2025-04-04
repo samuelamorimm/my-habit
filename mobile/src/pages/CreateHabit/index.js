@@ -11,6 +11,7 @@ import { Picker } from '@react-native-picker/picker';
 
 import Nav from '../../components/Nav';
 import Header from "../../components/Header";
+import API_URL from "../../services/api";
 
 export default function CreateHabits() {
 
@@ -21,7 +22,7 @@ export default function CreateHabits() {
   const [location, setLocation] = useState('');
   const [category, setCategory] = useState('EXERCISE');
 
-  const API_URL = 'http://10.19.14.121:8000/api/habits/';
+  
 
   const startDateTime = () => {
     DateTimePickerAndroid.open({
@@ -67,14 +68,14 @@ export default function CreateHabits() {
   
     console.log("Enviando dados:", data); // Debug
     try {
-      const response = await axios.post(API_URL, data, {
+      const response = await axios.post(`${API_URL}/api/habits/`, data, {
         headers: {
           "Content-Type": "application/json",
         },
       });
       console.log("Sucesso!", response.data);
     } catch (e) {
-      console.log("Erro ao fazer o post:", e.response?.data || e.message);
+      console.log("Erro ao fazer o post:", e);
     }
   }
   

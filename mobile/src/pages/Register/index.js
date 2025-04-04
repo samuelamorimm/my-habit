@@ -5,6 +5,7 @@ import axios from 'axios';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import API_URL from '../../services/api';
 
 export default function Register() {
   const [username, setUsername] = useState('');
@@ -14,7 +15,7 @@ export default function Register() {
   const navigation = useNavigation();
 
 
-  const API_URL = 'http://10.19.14.121:8000/'
+  
 
   async function registerUser(username, email, password) {
 

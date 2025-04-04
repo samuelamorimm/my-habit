@@ -1,161 +1,141 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, FlatList, TouchableOpacity, TextInput, Button, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
+import API_URL from '../../services/api';
+import { useNavigation } from '@react-navigation/native';
 
-import Nav from '../../components/Nav';
 import ScreenView from '../../components/ScreenView';
 import Header from '../../components/Header';
 
 export default function Home() {
-  const [data, setData] = useState([])
-  const dateNow = new Date()
-  const formattedDate = dateNow.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' });
+  const navigation = useNavigation()
 
-  
-  const API_URL = 'http://10.19.14.121:8000/api/habits/';
+  const [habits, setHabits] = useState([]);
+  const [checkins, setCheckins] = useState([]);
+
+  const dateNow = new Date();
+  const formattedDate = dateNow.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' });
+  const todayString = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
 
   useEffect(() => {
-    async function getHabits() {
+    async function fetchData() {
       try {
-        const response = await axios.get(API_URL);
-        setData(response.data);
-        console.log(response.data)
+        const [habitsRes, checkinsRes] = await Promise.all([
+          axios.get(`${API_URL}/api/habits`),
+          axios.get(`${API_URL}/api/checkins`),
+        ]);
+
+        setHabits(habitsRes.data);
+
+        // Filtra os check-ins da data de hoje
+        const checkinsHoje = checkinsRes.data.filter((c) => c.check_in_time.startsWith(todayString));
+        setCheckins(checkinsHoje);
+
       } catch (e) {
-        console.log('Erro ao consumir API:', e);
+        console.log('Erro ao buscar dados:', e);
       }
     };
 
-    getHabits();
-  }, [])
+    fetchData();
+  }, []);
+
+  // 🔹 Função para verificar se um hábito foi completado hoje
+  const isCompleted = (habitId) => {
+    return checkins.some((c) => c.habit === habitId && c.status === true);
+  };
+
+  // 🔹 Filtra hábitos do dia
+  const habitsAFazer = habits.filter((h) => !isCompleted(h.id)).slice(0, 2);
+  const habitsCompletados = habits.filter((h) => isCompleted(h.id));
 
   return (
     <ScreenView>
-
       <Header title='Hoje' />
       <Text style={styles.titulo}>{formattedDate}</Text>
 
       <View style={styles.areaHabits}>
+        {/* 🔹 Seção de hábitos À FAZER */}
         <Text style={styles.subtitulo}>À fazer</Text>
-
         <FlatList 
-          data={data}
-          renderItem={({item}) => <LinearGradient style={styles.habit}
-          colors={['#5F1C8C', '#F57C8C']} // Defina as cores do gradiente
-          start={{ x: 0, y: 0 }} // Começa no canto superior esquerdo
-          end={{ x: 1, y: 2 }}   // Termina no canto inferior direito (diagonal)
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, }}>
-            <Icon
-              name='fitness'
-              color='#fff'
-              size={25}
+          data={habitsAFazer}
+          renderItem={({ item }) => (
+            <LinearGradient style={styles.habit} colors={['#5F1C8C', '#F57C8C']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 2 }}>
+              <View style={styles.habitRow}>
+                <Icon name='fitness' color='#fff' size={25} />
+                <Text style={styles.habitTitle}>{item.title}</Text>
+              </View>
+              <View style={styles.habitRow}>
+                <Icon name='alarm' color='#fff' size={25} />
+                <Text style={styles.habitTimeTxt}>
+                  {new Date(`1970-01-01T${item.start_time}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </Text>
+              </View>
+            </LinearGradient>
+          )}
+        />
+        <TouchableOpacity style={styles.btnSub} onPress={() => navigation.navigate('estatistica')}>
+        <Text style={styles.subtitulo2}>ver mais</Text>
+        </TouchableOpacity>
 
-            />
 
-            <Text style={styles.habitTitle}>{item.title}</Text>
-          </View>
-
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, }}>
-            <Icon name='alarm' color='#fff' size={25} />
-            
-            <Text style={styles.habitTimeTxt}>
-              {new Date(`1970-01-01T${item.start_time}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}  
-            </Text>
-          </View>
-
-        </LinearGradient>}
-        /> 
-        {/* fim do FLATLIST */}
-
-        
-
+        {/* 🔹 Seção de hábitos COMPLETADOS */}
         <Text style={styles.subtitulo}>Completados</Text>
-        <LinearGradient style={styles.habit}
-          colors={['#5F1C8C', '#F57C8C']} // Defina as cores do gradiente
-          start={{ x: 0, y: 0 }} // Começa no canto superior esquerdo
-          end={{ x: 1, y: 2 }}   // Termina no canto inferior direito (diagonal)
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, }}>
-            <Icon
-              name='fitness'
-              color='#fff'
-              size={25}
-
-            />
-
-            <Text style={styles.habitTitle}>Treino da tarde</Text>
-          </View>
-
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, }}>
-            <Icon name='alarm' color='#fff' size={25} />
-            <Text style={styles.habitTimeTxt}>17:00</Text>
-          </View>
-
-        </LinearGradient>
-
-        <LinearGradient style={styles.habit}
-          colors={['#5F1C8C', '#F57C8C']} // Defina as cores do gradiente
-          start={{ x: 0, y: 0 }} // Começa no canto superior esquerdo
-          end={{ x: 1, y: 2 }}   // Termina no canto inferior direito (diagonal)
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, }}>
-            <Icon
-              name='fitness'
-              color='#fff'
-              size={25}
-
-            />
-
-            <Text style={styles.habitTitle}>Treino da tarde</Text>
-          </View>
-
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, }}>
-            <Icon name='alarm' color='#fff' size={25} />
-            <Text style={styles.habitTimeTxt}>17:00</Text>
-          </View>
-
-        </LinearGradient>
+        <FlatList 
+          data={habitsCompletados}
+          renderItem={({ item }) => (
+            <LinearGradient style={styles.habit} colors={['#5F1C8C', '#F57C8C']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 2 }}>
+              <View style={styles.habitRow}>
+                <Icon name='fitness' color='#fff' size={25} />
+                <Text style={styles.habitTitle}>{item.title}</Text>
+              </View>
+              <View style={styles.habitRow}>
+                <Icon name='alarm' color='#fff' size={25} />
+                <Text style={styles.habitTimeTxt}>
+                  {new Date(`1970-01-01T${item.start_time}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </Text>
+              </View>
+            </LinearGradient>
+          )}
+        />
       </View>
-
-      
     </ScreenView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  gradient: {
-    flex: 1,
-    width: '100%',
-    alignItems: 'center',
-    paddingTop: 25
-  },
   titulo: {
     fontSize: 20,
-    fontFamily: 'monospace',
     fontWeight: 'regular',
     color: '#fff',
     alignSelf: 'flex-start',
     marginLeft: 20,
   },
   areaHabits: {
-    width: '100%'
+    width: '100%',
   },
   subtitulo: {
-    fontFamily: 'monospace',
     fontSize: 20,
     fontWeight: 'semibold',
     color: '#fff',
     alignSelf: 'flex-start',
     marginLeft: 20,
     marginTop: 30,
+  },
+  btnSub: {
+    alignSelf: 'flex-end',
+    marginTop: 10,
+    marginRight: 15,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8
+  },
+  subtitulo2: {
+    fontSize: 16,
+    fontWeight: 'semibold',
+    color: '#fff',
   },
   habit: {
     width: '90%',
@@ -166,16 +146,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
     paddingHorizontal: 20,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   habitTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff'
+    color: '#fff',
   },
   habitTimeTxt: {
     fontWeight: 'semibold',
-    color: '#fff'
-  }
-
+    color: '#fff',
+  },
+  habitRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
 });

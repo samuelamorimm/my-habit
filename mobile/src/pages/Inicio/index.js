@@ -7,7 +7,7 @@ import axios from 'axios';
 
 export default function Inicio() {
 
-    const navigation = useNavigation();
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>

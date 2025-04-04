@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers import serialize
 from django.http import JsonResponse
 import json
+from django.utils.timezone import now
 from rest_framework import status
 
 
@@ -28,14 +29,23 @@ class CheckInViewSet(viewsets.ModelViewSet):
             habit = Habit.objects.get(id=habit_id)
         except Habit.DoesNotExist:
             return JsonResponse({"error": "Hábito não encontrado"}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Pegando a data de hoje para filtrar check-ins do dia
+        today = now().date()
 
         # Criando o check-in
-        checkin = CheckIn.objects.create(
+        checkin, created = CheckIn.objects.get_or_create(
             habit=habit,
-            status=True  # Marcando como concluído
+            check_in_time__date=today,
+            defaults={"status": True} # Marcando como concluído
         )
 
-        return JsonResponse(CheckInSerializer(checkin).data, status=status.HTTP_201_CREATED)
+        if not created:
+            # Se já existia, alterna entre marcado/desmarcado
+            checkin.status = not checkin.status
+            checkin.save()
+
+        return JsonResponse(CheckInSerializer(checkin).data, status=status.HTTP_200_OK)
 
 
 def habit_list(request):
