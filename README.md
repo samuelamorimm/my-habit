@@ -1,69 +1,104 @@
-**BRIEFING DA ATIVIDADE – DESENVOLVIMENTO MOBILE**  
+# 🏆 **MyHabit - Gerencie Seus Hábitos de Forma Eficiente**
 
-### Curso: Técnico em Informática para Internet  
-### Unidade: Desenvolvimento Mobile  
-### Nome da Atividade: Implementação de Aplicativo Mobile para o HabitPro  
+Bem-vindo ao **MyHabit**! Este aplicativo ajuda você a organizar seus hábitos diários, acompanhar seu progresso e visualizar relatórios detalhados. 💪📊  
 
----  
+---
 
-### **1. Objetivo da Atividade**  
-Nesta atividade, vocês serão responsáveis por desenvolver a interface mobile do projeto **HabitPro**, utilizando **React Native com Expo**. O backend do sistema já foi desenvolvido utilizando **Django Rest Framework (DRF)** e está disponível no repositório do GitHub:
+## 📌 **Funcionalidades**  
 
-🔗 **Repositório do Backend:** [https://github.com/wesscosta/habitpro](https://github.com/wesscosta/habitpro)
+✔️ **Criação de Hábitos**: Adicione novos hábitos definindo horário, categoria e localização.  
+✔️ **Listagem e Status**: Veja seus hábitos do dia e marque como concluídos.  
+✔️ **Relatórios**: Acesse os hábitos concluídos e pendentes em qualquer data.  
+✔️ **Autenticação JWT**: Login seguro com token de autenticação. 🔑  
+✔️ **Banco de Dados SQLite**: Armazena seus hábitos de forma leve e eficiente.  
+✔️ **Navegação Intuitiva**: Interface simples e amigável. 🎨  
 
-O objetivo principal é consumir a API REST fornecida pelo backend e criar uma aplicação mobile funcional, com telas para cadastro, login e gerenciamento de hábitos.
+---
 
----  
+## ⚙️ **Tecnologias Utilizadas**  
 
-### **2. Requisitos Técnicos**  
-#### **2.1 Tecnologias e Ferramentas**  
-- **Linguagem**: JavaScript/TypeScript  
-- **Framework**: React Native (Expo)  
-- **Gerenciamento de Estado**: Context API ou Redux (opcional)  
-- **Requisições à API**: Fetch API ou Axios  
-- **Roteamento**: React Navigation  
-- **Armazenamento Local**: AsyncStorage (para autenticação)  
-- **Estilização**: Styled Components ou TailwindCSS  
+### 🔹 **Frontend (React Native + Expo)**  
+- React Native  
+- Expo  
+- React Navigation  
+- Axios  
+- React Native Calendars  
+- React Native Picker  
+- React Native Vector Icons  
+- Styled Components  
 
-#### **2.2 Funcionalidades Mínimas**  
-- Tela de **Login** e **Cadastro de Usuário** (autenticação via API).  
-- Tela de **Dashboard**, exibindo hábitos cadastrados.  
-- Funcionalidade para **criação, edição e exclusão** de hábitos.  
-- Integração com o backend para sincronização de dados.  
-- Implementação de **navegação entre telas**.  
+### 🔹 **Backend (Django REST Framework)**  
+- Django  
+- Django REST Framework  
+- Django SQLite  
+- JWT Authentication (ObtainAuthToken)  
 
-#### **2.3 Extras (Opcional, para quem quiser ir além!)**  
-- Implementar notificações push para lembretes de hábitos.  
-- Criar um sistema de estatísticas para monitoramento do progresso dos hábitos.  
-- Personalizar a UI/UX com animações e design responsivo.  
+---
 
----  
+## 🚀 **Instalação e Configuração**  
 
-### **3. Etapas da Atividade**  
-1. **Configuração do Ambiente**: Criar um novo projeto Expo e instalar dependências necessárias.  
-2. **Conectar ao Backend**: Testar endpoints da API com o Postman ou Thunder Client antes da implementação.  
-3. **Desenvolver as Telas**: Criar os componentes da interface seguindo os requisitos.  
-4. **Implementar a Lógica de Negócio**: Criar chamadas à API para autenticação e gerenciamento de hábitos.  
-5. **Testes e Ajustes**: Garantir que todas as funcionalidades estejam funcionando corretamente.  
-6. **Entrega Final**: Subir o código para um repositório no GitHub e documentar as funcionalidades implementadas.  
+### **1️⃣ Clone o Repositório**  
+```bash
+git clone https://github.com/samuelamorimm/my-habit.git
+cd my-habit
+```
 
----  
+---
 
-### **4. Entrega e Avaliação**  
-- **Forma de entrega:** Link do repositório no GitHub + apresentação em pitch com demonstração do aplicativo  
-- **Critérios de avaliação:**  
-  - Funcionalidade e integração correta com o backend (40%)  
-  - Organização do código e boas práticas (20%)  
-  - UI/UX e usabilidade (20%)  
-  - Documentação do projeto (README explicativo) (10%)  
-  - Implementação de funcionalidades extras (10%)  
+### 🎮 **2️⃣ Configuração do Backend**  
 
-As equipes serão **ranqueadas e premiadas** conforme a qualidade dos seus projetos.
+#### 🔹 Criar um ambiente virtual  
+```bash
+cd backend
+python -m venv venv  # Criando ambiente virtual
+source venv/bin/activate  # (Linux/macOS)
+venv\Scripts\activate  # (Windows)
+```
 
----  
+#### 🔹 Instalar dependências  
+```bash
+pip install -r requirements.txt
+```
 
-### **5. Dúvidas e Suporte**  
-Caso tenham dúvidas sobre o backend ou a implementação do aplicativo, vocês podem abrir **issues** no repositório ou enviar perguntas no grupo da turma.  
+#### 🔹 Aplicar migrações e rodar o servidor  
+```bash
+python manage.py migrate
+python manage.py runserver
+```
+O backend estará disponível em **http://127.0.0.1:8000** 💼  
 
-🚀 **Bons códigos e boa prática!** 💡
+---
+
+### 📱 **3️⃣ Configuração do Frontend**  
+
+#### 🔹 Instalar dependências  
+```bash
+cd ../mobile
+npm install
+```
+
+#### 🔹 Rodar o projeto no Expo  
+```bash
+npx expo start
+```
+Agora, basta escanear o QR Code com o Expo Go ou rodar no emulador! 📱🎉  
+
+---
+
+## 🔮 **Melhorias Futuras**  
+
+🔹 **Funcionalidade de Perfil**: Adicionar edição de perfil e avatar.  
+🔹 **Login com Google**: Autenticação social para facilitar o acesso.  
+🔹 **Relatórios Avançados**: Incluir gráficos detalhados 📊.  
+🔹 **Notificações**: Alertas para lembrar dos hábitos no horário certo.  
+🔹 **Sincronização na Nuvem**: Possibilidade de backup e acesso de diferentes dispositivos. ☁️  
+
+---
+
+## 🤝 **Contribuição**  
+Quer ajudar a melhorar o **MyHabit**? Fique à vontade para abrir issues, sugerir melhorias ou enviar pull requests! 🙌  
+
+📉 **Licença**: MIT 🐟  
+
+🚀 *Vamos construir hábitos melhores juntos!*
 
